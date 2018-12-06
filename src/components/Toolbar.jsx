@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 
-const Toolbar = () => {
+const Toolbar = (props) => {
+  const { selectToggleAll,markRead } = props
+  const selected = false
+  const allSelected = selected ? "fa-check-square-o" : "fa-minus-square-o"
+
   return (
     <div className="App">
     <div className="row toolbar">
@@ -15,10 +19,10 @@ const Toolbar = () => {
     </a>
 
     <button class="btn btn-default">
-      <i class="fa fa-minus-square-o"></i>
+      <i onClick={() => selectToggleAll()} class={"fa " + allSelected}></i>
     </button>
 
-    <button class="btn btn-default">Mark As Read</button>
+    <button onClick={() => markRead()} class="btn btn-default">Mark As Read</button>
 
     <button class="btn btn-default">Mark As Unread</button>
 

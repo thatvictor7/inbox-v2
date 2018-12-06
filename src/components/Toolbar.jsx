@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 
 const Toolbar = () => {
   return (
-    <div class="row toolbar">
+    <div className="App">
+    <div className="row toolbar">
   <div class="col-md-12">
     <p class="pull-right">
       <span class="badge badge">2</span>
@@ -39,6 +40,7 @@ const Toolbar = () => {
       <i class="fa fa-trash-o"></i>
     </button>
   </div>
+</div>
 </div>
   )
 }

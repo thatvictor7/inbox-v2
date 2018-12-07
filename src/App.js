@@ -5,9 +5,6 @@ import Toolbar from './components/Toolbar'
 import MessageList from './components/MessageList'
 
 class App extends Component {
-  // state = {
-
-  // }
     constructor(props) {
       super(props)
       this.state = {
@@ -19,8 +16,6 @@ class App extends Component {
     }
 
   starToggle(messageId) {
-    // this.getRead()
-    // console.log(this.state)
      fetch('http://localhost:8082/api/messages', {
          method: "PATCH",
          headers: {
@@ -35,7 +30,6 @@ class App extends Component {
          this.setState({
            messages: data
          })
-         console.log(this.state)
        })
   }
 
@@ -54,7 +48,6 @@ class App extends Component {
            this.setState({
              messages: data
            })
-           console.log(this.state)
          })
      }
 
@@ -74,14 +67,16 @@ class App extends Component {
           this.setState({
             messages: data
           })
-          // console.log(this.state)
         })
     }
 
     markRead(messageId) {
-      // console.log(this.state)
       this.getRead()
-      fetch('http://localhost:8082/api/messages', {
+      this.state.readMessagesList ? this.fetching() : console.log('no')
+    }
+
+    fetching() {
+        const fetching = (fetch('http://localhost:8082/api/messages', {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json"
@@ -90,24 +85,20 @@ class App extends Component {
             messageIds: this.state.readMessagesList,
             command: 'read'
           })
-        }).then(res => res.json())
+        }).then(res => res.json())  ``
         .then(data => {
           this.setState({
             messages: data
           })
-          console.log(this.state.readMessagesList)
-        })
+        }))
     }
 
     getRead() {
-      // console.log(this.state.messages)
       const readMessages = []
       this.state.messages.map((message,id) => {
         message.read ? readMessages.push(id) : console.log(id,'nah')
       })
-      // console.log(readMessages)
       this.setState({ readMessagesList: readMessages})
-      // console.log(this.state)
     }
 
   componentDidMount() {

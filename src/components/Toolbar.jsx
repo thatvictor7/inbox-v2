@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 
 const Toolbar = (props) => {
-  const { selectToggleAll,markRead } = props
-  const selected = false
-  const allSelected = selected ? "fa-check-square-o" : "fa-minus-square-o"
+  const { selectToggleAll, readUnreadButton, allSelected,unreadCount } = props
+  const allSelectedButton = allSelected ? "fa-check-square-o" : "fa-minus-square-o"
 
   return (
     <div className="App">
     <div className="row toolbar">
   <div class="col-md-12">
     <p class="pull-right">
-      <span class="badge badge">2</span>
+      <span class="badge badge">{unreadCount}</span>
       unread messages
     </p>
 
@@ -19,12 +18,12 @@ const Toolbar = (props) => {
     </a>
 
     <button class="btn btn-default">
-      <i onClick={() => selectToggleAll()} class={"fa " + allSelected}></i>
+      <i onClick={() => selectToggleAll()} class={"fa " + allSelectedButton}></i>
     </button>
 
-    <button onClick={() => markRead()} class="btn btn-default">Mark As Read</button>
+    <button onClick={() => readUnreadButton('read')} class="btn btn-default">Mark As Read</button>
 
-    <button class="btn btn-default">Mark As Unread</button>
+    <button onClick={() => readUnreadButton('unread')} class="btn btn-default">Mark As Unread</button>
 
     <select class="form-control label-select">
       <option>Apply label</option>

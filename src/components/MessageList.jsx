@@ -3,13 +3,14 @@ import Message from './Message'
 
 
 const MessageList = (props) => {
-  const { messages,starToggle,selectToggle } = props
+  const { messages,starToggle,selectToggle,markRead } = props
 
   return(
     <div>
     {messages.map(message => {
       return <Message starred={message.starred}
                       starToggle={starToggle}
+                      markRead={markRead}
                       selectToggle={selectToggle}
                       id={message.id}
                       labels={message.labels}

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+// import ComposeMessage from '/ComposeMessage'
 
 const Toolbar = (props) => {
-  const { selectToggleAll, readUnreadButton, allSelected,unreadCount } = props
+  const { selectToggleAll, readUnreadButton, allSelected, unreadCount, composeClicked } = props
   const allSelectedButton = allSelected ? "fa-check-square-o" : "fa-minus-square-o"
+  const oneOrMore = unreadCount > 1 ? "s" : ""
 
   return (
     <div className="App">
@@ -10,11 +12,11 @@ const Toolbar = (props) => {
   <div class="col-md-12">
     <p class="pull-right">
       <span class="badge badge">{unreadCount}</span>
-      unread messages
+      unread message{oneOrMore}
     </p>
 
     <a class="btn btn-danger">
-      <i class="fa fa-plus"></i>
+      <i onClick={() => composeClicked()} class="fa fa-plus"></i>
     </a>
 
     <button class="btn btn-default">

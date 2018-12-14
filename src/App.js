@@ -3,13 +3,16 @@ import './App.css';
 import Toolbar from './components/Toolbar'
 // import Message from './components/Message'
 import MessageList from './components/MessageList'
+import ComposeMessage from './components/ComposeMessage'
 
 class App extends Component {
     constructor(props) {
       super(props)
       this.state = {
         allSelected: false,
-        unreadCount: 0
+        unreadCount: 0,
+        composeClicked: false,
+        subjectValue: ""
       }
       this.starToggle = this.starToggle.bind(this);
       this.selectToggle = this.selectToggle.bind(this);
@@ -18,7 +21,15 @@ class App extends Component {
       this.markUnread = this.markUnread.bind(this);
       this.readUnreadButton = this.readUnreadButton.bind(this);
       this.readCounter = this.readCounter.bind(this);
+      this.composeClicked = this.composeClicked.bind(this);
+      this.handleChange = this.handleChange.bind(this);
+      this.handleBody = this.handleBody.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
     }
+
+  composeClicked() {
+    !this.state.composeClicked ? this.setState({composeClicked:true}) : this.setState({composeClicked:false})
+  }
 
   starToggle(messageId) {
      fetch('http://localhost:8082/api/messages', {
@@ -41,7 +52,6 @@ class App extends Component {
 
      selectToggleAll() {
        let arr = [...Array(this.state.messages.length+1).keys()].splice(1, this.state.messages.length+1)
-      //  console.log(arr)
        fetch('http://localhost:8082/api/messages', {
            method: "PATCH",
            headers: {
@@ -127,11 +137,9 @@ class App extends Component {
         return message
       })
       this.setState({ messages: updatedMessages })
-
     }
 
     readUnreadButton(commandButton) {
-      // console.log(this.state)
       if (commandButton === 'read') {
         this.state.messages.map(message => {
           message.selected ? this.markRead(message.id) : console.log('error')
@@ -144,18 +152,57 @@ class App extends Component {
     }
 
     readCounter = () => {
-      // console.log(this.state.messages)
       let counter = 0
       if (this.state.messages) {
+        this.setState({ unreadCount: 0 })
         this.state.messages.map(message => {
           if (!message.read) {
             counter++
             this.setState({ unreadCount: counter })
-          }
+          } 
         })
       }
-      console.log(this.state)
     }
+
+    handleSubmit(event) {
+      this.postReq()
+      event.preventDefault();
+    }
+
+    handleChange(event) {
+      this.setState({
+        subjectValue: event.target.value
+      })
+    }
+
+    handleBody(event) {
+        this.setState({
+          bodytValue: event.target.value
+        })
+    }
+
+  postReq = async() => {
+    console.log(this.state)
+    const url = 'http://localhost:8082/api/messages'
+    const payload = {
+      subject: this.state.subjectValue,
+      body: this.state.bodytValue,
+      read: false,
+      starred: false,
+      labels: [],
+      selected: false
+    }
+    await fetch(url,{
+      method: 'post',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      return response.json();
+    })
+  }
 
   async componentDidMount() {
     let res = await fetch('http://localhost:8082/api/messages')
@@ -170,9 +217,14 @@ class App extends Component {
     return (
       <div>
         <Toolbar readUnreadButton={this.readUnreadButton}
+                 composeClicked={this.composeClicked}
                  unreadCount={this.state.unreadCount}
                  allSelected={this.allSelected}
                  selectToggleAll={this.selectToggleAll}/>
+        {this.state.composeClicked ? <ComposeMessage handleChange={this.handleChange}
+                                                     handleBody={this.handleBody}
+                                                     handleStateForm={this.handleStateForm}
+                                                     handleSubmit={this.handleSubmit} /> : < div > </div>}
         {this.state.messages ? <MessageList starToggle={this.starToggle}
                                             markRead={this.markRead}
                                             selectToggle={this.selectToggle}
